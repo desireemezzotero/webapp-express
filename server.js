@@ -5,9 +5,11 @@ const port = process.env.PORT || 3000
 const errorsHandler = require ('./middlewares/errorsHandler.js');
 const notFound = require ('./middlewares/notFound.js');
 const router = require('./routes/movie.js')
+const imagePath = require('./middlewares/imagePath.js')
 
 app.use(express.static('public'));
 app.use(express.json());
+app.use(imagePath)
 
 app.get('/', (req,res) => {
   res.send('server dei movies')

@@ -4,17 +4,27 @@ const imagePath = require('../middlewares/imagePath')
 const index = ('/', (req,res) => {
   const sql = 'SELECT * FROM movies'
 
-  connection.query(sql, (err,results) => {
-    if(err) return res.status(500).json({err:'errore nella query del database'})
-    res.json(results)
-  })
+  connection.query(sql, (err, results) => {
+    if (err) return res.status(500).json({ err: 'errore nella query del database' });
+
+    const moviesWithImages = results.map(movie => {
+     
+      const img = req.imagePath + movie.image;
+      return {
+        ...movie,
+        img 
+      };
+    });
+
+    res.json(moviesWithImages); 
+  });
 })
 
 const show = ('/', (req,res) => {
   const id = req.params.id;
   const sql = ` SELECT * FROM movies WHERE id = ? `
 
-  const sqlReviews = `SELECT ROUND(AVG(reviews.vote)) Vote FROM reviews WHERE movie_id = ?`
+  const sqlReviews = `SELECT * FROM reviews WHERE movie_id = ?`
 
   connection.query(sql, [id], (err, results) => {
     if(err) return res.status(500).json({err:'errore nella query del database'})

@@ -42,7 +42,25 @@ const show = ('/', (req,res) => {
   })
 })
 
+const store = ('/', (req,res) => {
+  const id = req.params.id
+  console.log(id)
+  const {name, text, vote} = req.body
+  const sql = `INSERT INTO reviews (name, text, vote, movie_id) VALUES (?,?,?,?)`
+
+  connection.query(sql, [name,text,vote,id], (err, results) => {
+    if(err) return res.status(500).json({error:err})
+    res.status(201)
+  console.log(results)
+    res.json({
+      messagge:'recensione aggiunta con successo',
+      id: results.insertId
+    })
+  })
+})
+
 module.exports = {
   index,
-  show
+  show,
+  store
 }
